@@ -1,0 +1,57 @@
+# =========================
+# Node
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Angular build
+# =========================
+dist/
+out-tsc/
+.angular/
+.cache/
+tmp/
+
+# TypeScript
+*.tsbuildinfo
+
+# =========================
+# Testing
+# =========================
+coverage/
+
+# =========================
+# Environment (solo si hay secretos)
+# Descomenta si usan variables sensibles
+# src/environments/environment.prod.ts
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE
+# =========================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# =========================
+# Variables de entorno
+# =========================
+.env
+.env.local
+.env.*.local
