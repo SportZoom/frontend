@@ -7,6 +7,7 @@ import { ConfirmacionComponent } from './confirmacion/confirmacion';
 import { AdminPedidosComponent } from './admin-pedidos/admin-pedidos';
 import { ConsultaPedidoComponent } from './consulta-pedido/consulta-pedido';
 import { adminGuard } from './guards/admin.guard'; 
+import { RegistroComponent } from './registro/registro';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'tienda', pathMatch: 'full' },
@@ -17,4 +18,5 @@ export const routes: Routes = [
   { path: 'confirmacion', component: ConfirmacionComponent },
   { path: 'consulta-pedido', component: ConsultaPedidoComponent },
   { path: 'admin/pedidos', component: AdminPedidosComponent, canActivate: [adminGuard] },
+  { path: 'registro', component: RegistroComponent },
 ];

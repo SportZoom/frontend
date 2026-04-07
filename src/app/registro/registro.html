@@ -1,0 +1,103 @@
+<div class="flex min-h-screen items-center justify-center bg-gray-50 text-gray-800 py-10">
+  <div class="w-full max-w-md bg-white border rounded-2xl shadow-md p-8">
+
+    <!-- Cabecera -->
+    <h2 class="text-3xl font-bold text-center text-blue-600 mb-2">Crear cuenta</h2>
+    <p class="text-center text-gray-500 mb-6 text-sm">Regístrate para guardar tus compras</p>
+
+    <!-- Mensaje de buen registro-->
+    <div *ngIf="exitoso"
+      class="bg-green-50 border border-green-300 text-green-700 rounded-lg p-3 text-sm text-center mb-4">
+       ¡Registro exitoso! Redirigiendo a la tienda...
+    </div>
+
+    <form (ngSubmit)="registrar()" class="space-y-5" *ngIf="!exitoso">
+
+      <!-- Nombre -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Nombre completo <span class="text-red-500">*</span>
+        </label>
+        <input type="text" [(ngModel)]="nombre" name="nombre" required
+          placeholder="Ingresa tu nombre completo"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
+      </div>
+
+      <!-- Correo -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Correo electrónico <span class="text-red-500">*</span>
+        </label>
+        <input type="email" [(ngModel)]="correo" name="correo" required
+          placeholder="tucorreo@ejemplo.com"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
+      </div>
+
+      <!-- Género -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Género <span class="text-red-500">*</span>
+        </label>
+        <select [(ngModel)]="genero" name="genero" required
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition bg-white">
+          <option value="" disabled>Selecciona tu género</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+          <option value="O">Otro</option>
+          <option value="P">Prefiero no decir</option>
+        </select>
+      </div>
+
+      <!-- Contraseña -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Contraseña <span class="text-red-500">*</span>
+        </label>
+        <input type="password" [(ngModel)]="password" name="password" required
+          placeholder="Mínimo 8 caracteres"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
+      </div>
+
+      <!-- Confirmar contraseña -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Confirmar contraseña <span class="text-red-500">*</span>
+        </label>
+        <input type="password" [(ngModel)]="confirmarPassword" name="confirmarPassword" required
+          placeholder="Repite tu contraseña"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
+      </div>
+
+      <!-- Términos y condiciones -->
+      <div class="flex items-start gap-2">
+        <input type="checkbox" id="terminos" [(ngModel)]="aceptaTerminos" name="aceptaTerminos"
+          class="mt-1 accent-blue-600" />
+        <label for="terminos" class="text-sm text-gray-600">
+          Acepto los
+          <a href="#" class="text-blue-600 underline hover:text-blue-800">términos y condiciones</a>
+          de tratamiento de datos personales. <span class="text-red-500">*</span>
+        </label>
+      </div>
+
+      
+      <p class="text-center text-sm text-red-600" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+      
+      <button type="submit" [disabled]="cargando"
+        class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50">
+        {{ cargando ? 'Registrando...' : 'Crear cuenta' }}
+      </button>
+
+    </form>
+
+    
+    <p class="text-center text-sm text-gray-500 mt-5">
+      ¿Ya tienes cuenta?
+      <a routerLink="/login-cliente" class="text-blue-600 font-medium hover:underline">Inicia sesión</a>
+    </p>
+
+    <div class="mt-6 text-center text-xs text-gray-400 border-t pt-3">
+      © 2025 SportZoom — Tu tienda de calzado
+    </div>
+  </div>
+</div>
