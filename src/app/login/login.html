@@ -1,35 +1,80 @@
 <div class="flex min-h-screen items-center justify-center bg-gray-50 text-gray-800">
-    <div class="w-full max-w-md bg-white border rounded-2xl shadow-md p-8">
-        <h2 class="text-3xl font-bold text-center text-blue-600 mb-2">Panel Administrativo</h2>
-        <p class="text-center text-gray-500 mb-6 text-sm">Accede con tu cuenta de administrador</p>
+  <div class="w-full max-w-md bg-white border rounded-2xl shadow-md p-8">
 
-        <form (ngSubmit)="iniciarSesion()" class="space-y-5">
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
-                <input type="text" id="username" [(ngModel)]="username" name="username" required
-                    placeholder="Ingresa tu usuario"
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
-            </div>
+    <div class="text-2xl font-bold text-center text-blue-600 mb-6">SportZoom</div>
 
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                <input type="password" id="password" [(ngModel)]="password" name="password" required
-                    placeholder="Ingresa tu contraseña"
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
-            </div>
-
-            <button type="submit" [disabled]="cargando"
-                class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50">
-                {{ cargando ? 'Ingresando...' : 'Iniciar Sesión' }}
-            </button>
-
-            <p class="text-center text-sm text-red-600 mt-2" *ngIf="errorMsg">
-                {{ errorMsg }}
-            </p>
-        </form>
-
-        <div class="mt-8 text-center text-xs text-gray-400 border-t pt-3">
-            © 2025 SportZoom — Acceso exclusivo para administradores
-        </div>
+    <!-- Pestañas -->
+    <div class="flex rounded-xl overflow-hidden border mb-6">
+      <button
+        (click)="cambiarPestana('cliente')"
+        [class.bg-blue-600]="pestanaActiva === 'cliente'"
+        [class.text-white]="pestanaActiva === 'cliente'"
+        [class.bg-white]="pestanaActiva !== 'cliente'"
+        [class.text-gray-600]="pestanaActiva !== 'cliente'"
+        class="flex-1 py-2 text-sm font-semibold transition">
+        Cliente
+      </button>
+      <button
+        (click)="cambiarPestana('admin')"
+        [class.bg-blue-600]="pestanaActiva === 'admin'"
+        [class.text-white]="pestanaActiva === 'admin'"
+        [class.bg-white]="pestanaActiva !== 'admin'"
+        [class.text-gray-600]="pestanaActiva !== 'admin'"
+        class="flex-1 py-2 text-sm font-semibold transition border-l">
+        Administrador
+      </button>
     </div>
+
+    <form (ngSubmit)="iniciarSesion()" class="space-y-4">
+
+      <!-- Formulario Cliente -->
+      <ng-container *ngIf="pestanaActiva === 'cliente'">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+          <input type="email" [(ngModel)]="correo" name="correo"
+            placeholder="tu@correo.com"
+            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+          <input type="password" [(ngModel)]="passwordCliente" name="passwordCliente"
+            placeholder="Tu contraseña"
+            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
+        </div>
+      </ng-container>
+
+      <!-- Formulario Admin -->
+      <ng-container *ngIf="pestanaActiva === 'admin'">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
+          <input type="text" [(ngModel)]="username" name="username"
+            placeholder="Ingresa tu usuario"
+            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+          <input type="password" [(ngModel)]="passwordAdmin" name="passwordAdmin"
+            placeholder="Ingresa tu contraseña"
+            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition" />
+        </div>
+      </ng-container>
+
+      <button type="submit" [disabled]="cargando"
+        class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50">
+        {{ cargando ? 'Ingresando...' : 'Iniciar Sesión' }}
+      </button>
+
+      <p class="text-center text-sm text-red-600" *ngIf="errorMsg">{{ errorMsg }}</p>
+    </form>
+
+    <!-- Solo en pestaña cliente -->
+    <p *ngIf="pestanaActiva === 'cliente'" class="text-center text-sm text-gray-500 mt-5">
+      ¿No tienes cuenta?
+      <a routerLink="/registro" class="text-blue-600 hover:underline font-medium">Regístrate aquí</a>
+    </p>
+
+    <div class="mt-6 text-center text-xs text-gray-400 border-t pt-3">
+      © 2025 SportZoom
+    </div>
+  </div>
 </div>

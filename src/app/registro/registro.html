@@ -79,10 +79,10 @@
         </label>
       </div>
 
-      
+
       <p class="text-center text-sm text-red-600" *ngIf="errorMsg">{{ errorMsg }}</p>
 
-      
+
       <button type="submit" [disabled]="cargando"
         class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50">
         {{ cargando ? 'Registrando...' : 'Crear cuenta' }}
@@ -90,10 +90,10 @@
 
     </form>
 
-    
+
     <p class="text-center text-sm text-gray-500 mt-5">
       ¿Ya tienes cuenta?
-      <a routerLink="/login-cliente" class="text-blue-600 font-medium hover:underline">Inicia sesión</a>
+      <a routerLink="/login" class="text-blue-600 font-medium hover:underline">Inicia sesión</a>
     </p>
 
     <div class="mt-6 text-center text-xs text-gray-400 border-t pt-3">

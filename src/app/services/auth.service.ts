@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private baseUrl = '/api/token/';
+  private clienteLoginUrl = '/api/clientes/login/';
 
   constructor(private http: HttpClient) {}
 
@@ -49,4 +50,19 @@ export class AuthService {
       localStorage.removeItem('usuario');
     }
   }
+
+  loginCliente(correo: string, password: string) {
+    return this.http.post(this.clienteLoginUrl, { correo, password });
+  }
+
+  guardarSesionCliente(res: any) {
+    if (this.isBrowser()) {
+      localStorage.setItem('token', res.access);
+      localStorage.setItem('usuario', JSON.stringify({
+        nombre: res.nombre,
+        correo: res.correo,
+        es_admin: false
+      }));
+    }
+}
 }

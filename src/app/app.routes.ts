@@ -6,7 +6,7 @@ import { CheckoutComponent } from './checkout/checkout';
 import { ConfirmacionComponent } from './confirmacion/confirmacion';
 import { AdminPedidosComponent } from './admin-pedidos/admin-pedidos';
 import { ConsultaPedidoComponent } from './consulta-pedido/consulta-pedido';
-import { adminGuard } from './guards/admin.guard'; 
+import { adminGuard } from './guards/admin.guard';
 import { RegistroComponent } from './registro/registro';
 
 export const routes: Routes = [

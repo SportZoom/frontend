@@ -22,6 +22,8 @@ interface Producto {
 interface Usuario {
   es_admin: boolean;
   username: string;
+  nombre?: string;
+  correo?: string;
 }
 
 @Component({
@@ -40,7 +42,7 @@ export class TiendaComponent implements OnInit {
   apiUrl = 'http://127.0.0.1:8000/api';
   productos: Producto[] = [];
   productoSeleccionado: Producto | null = null;
-  
+
   // Filtros
   filtroNombre: string = '';
   filtroMarca: string = '';
@@ -49,7 +51,7 @@ export class TiendaComponent implements OnInit {
   filtroPrecioMax: number | null = null;
 
   cantidadCarrito: number = 0;
-  
+
   // Paginación
   paginaActual: number = 1;
   productosPorPagina: number = 10;
@@ -60,18 +62,18 @@ export class TiendaComponent implements OnInit {
 
   indiceInicio = 0;
   indiceFin = 0;
-  
+
   cargando: boolean = false;
   usuario: Usuario | null = null;
 
   // Opciones disponibles
   marcasDisponibles: string[] = [
-    'Nike', 'Adidas', 'Puma', 'Reebok', 'Converse', 
+    'Nike', 'Adidas', 'Puma', 'Reebok', 'Converse',
     'Vans', 'New Balance', 'Asics', 'Under Armour'
   ];
-  
+
   tallasDisponibles: string[] = [
-    '35', '36', '37', '38', '39', '40', 
+    '35', '36', '37', '38', '39', '40',
     '41', '42', '43', '44', '45'
   ];
 
@@ -86,7 +88,7 @@ export class TiendaComponent implements OnInit {
   };
 
   selectedFile: File | null = null;
-  
+
   Math = Math;
 
   constructor(
@@ -105,7 +107,7 @@ export class TiendaComponent implements OnInit {
       this.cantidadCarrito = productos.reduce((total, p) => total + p.cantidad, 0);
       this.cdr.detectChanges();
     });
-    
+
     // Cargar cantidad inicial del carrito
     const carritoActual = this.carritoService.obtenerCarrito();
     this.cantidadCarrito = carritoActual.reduce((total, p) => total + p.cantidad, 0);
@@ -116,13 +118,13 @@ export class TiendaComponent implements OnInit {
     this.usuario = null;
     this.notificationService.info('Has cerrado sesión'); // ← CAMBIAR
   }
-  
+
   // Cargar productos con los filtros aplicados
   cargarProductos() {
     console.log('⏳ CARGAR PRODUCTOS LLAMADO');
     this.cargando = true;
 
-    let params: any = {}; 
+    let params: any = {};
 
     const nombreTrim = this.filtroNombre?.trim();
     const marcaTrim = this.filtroMarca?.trim();
@@ -206,20 +208,20 @@ export class TiendaComponent implements OnInit {
   obtenerPaginas(): number[] {
     const paginas: number[] = [];
     const rango = 2;
-    
-    for (let i = Math.max(1, this.paginaActual - rango); 
-         i <= Math.min(this.totalPaginas, this.paginaActual + rango); 
+
+    for (let i = Math.max(1, this.paginaActual - rango);
+         i <= Math.min(this.totalPaginas, this.paginaActual + rango);
          i++) {
       paginas.push(i);
     }
-    
+
     return paginas;
   }
 
   // Ver detalle del producto
   verDetalle(producto: Producto) {
     console.log('👁️ Ver detalle clickeado:', producto.nombre);
-    
+
     if (this.productoSeleccionado?.id === producto.id) {
       this.productoSeleccionado = null;
       console.log('Producto deseleccionado');
@@ -227,7 +229,7 @@ export class TiendaComponent implements OnInit {
       this.productoSeleccionado = producto;
       console.log('Producto seleccionado:', producto.nombre);
     }
-    
+
     this.cdr.detectChanges();
   }
 
@@ -236,7 +238,7 @@ export class TiendaComponent implements OnInit {
     if (event) {
       event.stopPropagation();
     }
-    
+
     if (!producto.id) return;
 
     this.carritoService.agregarProducto({
@@ -263,7 +265,7 @@ export class TiendaComponent implements OnInit {
 
     const headers = this.authService.obtenerCabeceraAuth();
     const formData = new FormData();
-    
+
     formData.append('nombre', this.productoForm.nombre ?? '');
     formData.append('descripcion', this.productoForm.descripcion ?? '');
     formData.append('precio', String(this.productoForm.precio ?? 0));
@@ -321,14 +323,14 @@ export class TiendaComponent implements OnInit {
     if (event) {
       event.stopPropagation();
     }
-    
+
     console.log('✏️ Editando producto:', producto.nombre);
-    
+
     this.productoForm = { ...producto };
     this.productoSeleccionado = producto;
-    
+
     this.cdr.detectChanges();
-    
+
     setTimeout(() => {
       const adminPanel = document.querySelector('section:has(form)');
       if (adminPanel) {
@@ -343,7 +345,7 @@ export class TiendaComponent implements OnInit {
     if (event) {
       event.stopPropagation();
     }
-    
+
     if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
 
     const headers = this.authService.obtenerCabeceraAuth();
