@@ -26,9 +26,9 @@ export class CheckoutComponent implements OnInit {
   cargando = false;
   error = '';
 
-  private readonly EMAILJS_SERVICE_ID = 'service_sportzoom'; 
-  private readonly EMAILJS_TEMPLATE_ID = 'template_7z7kclu'; 
-  private readonly EMAILJS_PUBLIC_KEY = 'G7vZ4iZaaFd7smpNk';     
+  private readonly EMAILJS_SERVICE_ID = 'service_sportzoom';
+  private readonly EMAILJS_TEMPLATE_ID = 'template_7z7kclu';
+  private readonly EMAILJS_PUBLIC_KEY = 'G7vZ4iZaaFd7smpNk';
 
   constructor(
     private checkoutService: CheckoutService,
@@ -37,18 +37,25 @@ export class CheckoutComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Calcular el total automáticamente del carrito
     const carrito = this.carritoService.obtenerCarrito();
     this.datos.subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     this.datos.iva = this.datos.subtotal * 0.19;
     this.datos.total = this.datos.subtotal + this.datos.iva;
-    
-    console.log('Subtotal:', this.datos.subtotal);
-    console.log('IVA (19%):', this.datos.iva);
-    console.log('Total:', this.datos.total);
+
+    // Prellenar nombre y email desde el usuario logueado
+    const usuarioRaw = localStorage.getItem('usuario');
+    if (usuarioRaw) {
+      const usuario = JSON.parse(usuarioRaw);
+      this.datos.nombre = usuario.nombre || usuario.username || '';
+      this.datos.email = usuario.correo || '';
+    }
   }
 
   pagar() {
+    if (!this.datos.direccion.trim()) {
+      this.error = 'La dirección de envío es obligatoria.';
+      return;
+    }
     this.cargando = true;
     this.error = '';
 
@@ -68,13 +75,13 @@ export class CheckoutComponent implements OnInit {
       numero_pedido: numero_pedido,
       total: this.datos.total,
       nombre: this.datos.nombre,
-      email: this.datos.email,        
+      email: this.datos.email,
       direccion: this.datos.direccion
     })
     .subscribe({
       next: (resp) => {
         console.log('Respuesta del servicio:', resp);
-        
+
         // Crear objeto de recibo completo
         const recibo = {
           numero_pedido: numero_pedido,
@@ -83,8 +90,8 @@ export class CheckoutComponent implements OnInit {
           direccion: this.datos.direccion,
           total: this.datos.total,
           fecha: new Date().toLocaleDateString('es-CO'),
-          carrito: resp.carrito || [], 
-          ...resp 
+          carrito: resp.carrito || [],
+          ...resp
         };
 
         console.log('Recibo completo a enviar:', recibo);
@@ -118,8 +125,12 @@ export class CheckoutComponent implements OnInit {
           .catch(err => console.error('Error enviando correo', err));
 
         // Guardar en localStorage como respaldo
+
         localStorage.setItem('ultimo_recibo', JSON.stringify(recibo));
-        
+
+        this.carritoService.limpiarCarrito();
+        localStorage.removeItem('numero_pedido');
+
         setTimeout(() => {
           this.router.navigate(['/confirmacion'], {
             state: { recibo: recibo }

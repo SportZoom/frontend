@@ -8,6 +8,7 @@ import { AdminPedidosComponent } from './admin-pedidos/admin-pedidos';
 import { ConsultaPedidoComponent } from './consulta-pedido/consulta-pedido';
 import { adminGuard } from './guards/admin.guard';
 import { RegistroComponent } from './registro/registro';
+import { MisPedidosComponent } from './mis-pedidos/mis-pedidos';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'tienda', pathMatch: 'full' },
@@ -19,4 +20,5 @@ export const routes: Routes = [
   { path: 'consulta-pedido', component: ConsultaPedidoComponent },
   { path: 'admin/pedidos', component: AdminPedidosComponent, canActivate: [adminGuard] },
   { path: 'registro', component: RegistroComponent },
+  { path: 'mis-pedidos', component: MisPedidosComponent },
 ];

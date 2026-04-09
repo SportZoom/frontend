@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router'; 
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { CheckoutService } from '../services/checkout.service';
 import { CarritoService } from '../services/carrito.service';
 
@@ -17,8 +17,9 @@ export class ConsultaPedidoComponent {
   error: string = '';
   buscando: boolean = false;
   cantidadCarrito: number = 0;
+  vieneDePedidos: boolean = false;
 
-  constructor(private checkoutService: CheckoutService, private carritoService: CarritoService) {}
+  constructor(private checkoutService: CheckoutService, private carritoService: CarritoService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.carritoService.carrito$.subscribe(productos => {
@@ -26,6 +27,14 @@ export class ConsultaPedidoComponent {
     });
     const carritoActual = this.carritoService.obtenerCarrito();
     this.cantidadCarrito = carritoActual.reduce((total, p) => total + p.cantidad, 0);
+
+    this.route.queryParams.subscribe(params => {
+      if (params['codigo']) {
+        this.vieneDePedidos = true;
+        this.numeroPedido = params['codigo'];
+        this.buscarPedido();
+      }
+    });
   }
 
   buscarPedido() {
@@ -51,20 +60,22 @@ export class ConsultaPedidoComponent {
   }
 
   getEstadoClass(estado: string): string {
-    switch(estado) {
-      case 'pagado': return 'text-green-600 bg-green-100';
-      case 'pendiente': return 'text-yellow-600 bg-yellow-100';
-      case 'fallido': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
-    }
+    const clases: Record<string, string> = {
+      comprado:   'text-blue-700 bg-blue-100 border-blue-300',
+      enviado:    'text-yellow-700 bg-yellow-100 border-yellow-300',
+      en_reparto: 'text-orange-700 bg-orange-100 border-orange-300',
+      entregado:  'text-green-700 bg-green-100 border-green-300',
+    };
+    return clases[estado] ?? 'text-gray-600 bg-gray-100 border-gray-300';
   }
 
   getEstadoTexto(estado: string): string {
-    switch(estado) {
-      case 'pagado': return 'Pagado';
-      case 'pendiente': return 'Pendiente de pago';
-      case 'fallido': return 'Pago fallido';
-      default: return estado;
-    }
+    const textos: Record<string, string> = {
+      comprado:   'Comprado',
+      enviado:    'Enviado',
+      en_reparto: 'En reparto',
+      entregado:  'Entregado',
+    };
+    return textos[estado] ?? estado;
   }
 }

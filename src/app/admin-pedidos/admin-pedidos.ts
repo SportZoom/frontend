@@ -62,7 +62,7 @@ export class AdminPedidosComponent implements OnInit {
     // Filtro por búsqueda (número de pedido, nombre, email)
     if (this.filtroBusqueda.trim()) {
       const busqueda = this.filtroBusqueda.toLowerCase();
-      resultado = resultado.filter(p => 
+      resultado = resultado.filter(p =>
         p.numero_pedido.toLowerCase().includes(busqueda) ||
         (p.nombre && p.nombre.toLowerCase().includes(busqueda)) ||
         (p.email && p.email.toLowerCase().includes(busqueda))
@@ -92,24 +92,22 @@ export class AdminPedidosComponent implements OnInit {
   }
 
   getEstadoClass(estado: string): string {
-    switch(estado) {
-      case 'pagado': return 'bg-green-100 text-green-800';
-      case 'enviado': return 'bg-blue-100 text-blue-800';
-      case 'entregado': return 'bg-gray-100 text-gray-800';
-      case 'pendiente': return 'bg-yellow-100 text-yellow-800';
-      case 'fallido': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
+    const clases: Record<string, string> = {
+      comprado:   'bg-blue-100 text-blue-800',
+      enviado:    'bg-yellow-100 text-yellow-800',
+      en_reparto: 'bg-orange-100 text-orange-800',
+      entregado:  'bg-green-100 text-green-800',
+    };
+    return clases[estado] ?? 'bg-gray-100 text-gray-800';
   }
 
   getEstadoTexto(estado: string): string {
-    switch(estado) {
-      case 'pagado': return 'Pagado';
-      case 'enviado': return 'Enviado';
-      case 'entregado': return 'Entregado';
-      case 'pendiente': return 'Pendiente';
-      case 'fallido': return 'Fallido';
-      default: return estado;
-    }
+    const textos: Record<string, string> = {
+      comprado:   'Comprado',
+      enviado:    'Enviado',
+      en_reparto: 'En reparto',
+      entregado:  'Entregado',
+    };
+    return textos[estado] ?? estado;
   }
 }
