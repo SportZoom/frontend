@@ -52,100 +52,48 @@ export class CheckoutComponent implements OnInit {
   }
 
   pagar() {
-    if (!this.datos.direccion.trim()) {
-      this.error = 'La dirección de envío es obligatoria.';
-      return;
-    }
-    this.cargando = true;
-    this.error = '';
-
-    // Recupera el número de pedido creado
-    const numero_pedido = localStorage.getItem("numero_pedido");
-
-    if (!numero_pedido) {
-      this.error = 'No hay pedido registrado';
-      this.cargando = false;
-      return;
-    }
-
-    console.log('Iniciando pago para pedido:', numero_pedido);
-
-    // Llamada al backend simulado
-    this.checkoutService.confirmarPago({
-      numero_pedido: numero_pedido,
-      total: this.datos.total,
-      nombre: this.datos.nombre,
-      email: this.datos.email,
-      direccion: this.datos.direccion
-    })
-    .subscribe({
-      next: (resp) => {
-        console.log('Respuesta del servicio:', resp);
-
-        // Crear objeto de recibo completo
-        const recibo = {
-          numero_pedido: numero_pedido,
-          nombre: this.datos.nombre,
-          email: this.datos.email,
-          direccion: this.datos.direccion,
-          total: this.datos.total,
-          fecha: new Date().toLocaleDateString('es-CO'),
-          carrito: resp.carrito || [],
-          ...resp
-        };
-
-        console.log('Recibo completo a enviar:', recibo);
-
-        // parámetros de EmailJS
-        const templateParams = {
-          to_name: recibo.nombre,
-          to_email: this.datos.email,
-          numero_pedido: recibo.numero_pedido,
-          fecha: recibo.fecha,
-          direccion: this.datos.direccion,
-          total: recibo.total,
-          productos: (recibo.carrito || []).map((item: any) => {
-            const nombre = item.nombre || item.producto || 'Producto';
-            const cantidad = item.cantidad || 1;
-            const precio = item.precio || item.precio_unitario || 0;
-
-            return `
-              <tr>
-                <td>${nombre}</td>
-                <td style="text-align: center;">${cantidad}</td>
-                <td style="text-align: right;">COP $${precio.toLocaleString('es-CO')}</td>
-              </tr>
-            `;
-          }).join('')
-        };
-
-        // envio del correo
-        emailjs.send(this.EMAILJS_SERVICE_ID, this.EMAILJS_TEMPLATE_ID, templateParams, this.EMAILJS_PUBLIC_KEY)
-          .then(response => console.log('Correo enviado', response.status, response.text))
-          .catch(err => console.error('Error enviando correo', err));
-
-        // Guardar en localStorage como respaldo
-
-        localStorage.setItem('ultimo_recibo', JSON.stringify(recibo));
-
-        this.carritoService.limpiarCarrito();
-        localStorage.removeItem('numero_pedido');
-
-        setTimeout(() => {
-          this.router.navigate(['/confirmacion'], {
-            state: { recibo: recibo }
-          }).then(success => {
-            console.log('Navegación exitosa:', success);
-          }).catch(error => {
-            console.error('Error en navegación:', error);
-          });
-        }, 100);
-      },
-      error: (err) => {
-        console.error('Error en el servicio:', err);
-        this.error = 'Error procesando el pago';
-        this.cargando = false;
-      }
-    });
+  if (!this.datos.direccion.trim()) {
+    this.error = 'La dirección de envío es obligatoria.';
+    return;
   }
+  this.cargando = true;
+  this.error = '';
+
+  const numero_pedido = localStorage.getItem('numero_pedido');
+
+  if (!numero_pedido) {
+    this.error = 'No hay pedido registrado';
+    this.cargando = false;
+    return;
+  }
+
+  // Primero actualiza nombre, email y dirección en el pedido
+  this.checkoutService.confirmarPago({
+    numero_pedido,
+    total: this.datos.total,
+    nombre: this.datos.nombre,
+    email: this.datos.email,
+    direccion: this.datos.direccion
+  }).subscribe({
+    next: () => {
+      // Luego crea la preferencia en Mercado Pago
+      this.checkoutService.crearPreferenciaMP(numero_pedido).subscribe({
+        next: (resp) => {
+          // Guarda el numero_pedido para usarlo en confirmación
+          localStorage.setItem('pedido_mp', numero_pedido);
+          // Redirige a Mercado Pago
+          window.location.href = resp.sandbox_init_point; // cambiar a init_point en producción
+        },
+        error: () => {
+          this.error = 'Error al conectar con Mercado Pago. Intenta nuevamente.';
+          this.cargando = false;
+        }
+      });
+    },
+    error: () => {
+      this.error = 'Error actualizando los datos del pedido.';
+      this.cargando = false;
+    }
+  });
+}
 }

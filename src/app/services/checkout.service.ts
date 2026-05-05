@@ -13,13 +13,25 @@ export class CheckoutService {
 
   constructor(private http: HttpClient) {}
 
-  // Confirmar pago con backend simulado
-  confirmarPago(payload: any): Observable<any> {
+  // Confirmar pago 
+    confirmarPago(payload: any): Observable<any> {
     return this.http.post(this.backendUrl, payload);
   }
 
   // Consultar pedido por código
   consultarPedido(numeroPedido: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/pedidos/consultar/${numeroPedido}/`);
+  }
+
+  // Crear preferencia de Mercado Pago
+  crearPreferenciaMP(numeroPedido: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/pagos/crear-preferencia/`, {
+      numero_pedido: numeroPedido
+    });
+  }
+
+  // Consultar estado del pago
+  estadoPagoMP(numeroPedido: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/pagos/estado/${numeroPedido}/`);
   }
 }

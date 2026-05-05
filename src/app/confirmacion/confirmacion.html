@@ -17,8 +17,49 @@
         </div>
     </main>
 
+    <!-- Pago Rechazado -->
+    <main class="flex-1 container mx-auto p-6" *ngIf="!cargando && pagoRechazado">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-4">
+                    <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Pago no completado</h2>
+                <p class="text-gray-600 mb-6">Tu pago fue rechazado o cancelado. Puedes intentarlo nuevamente.</p>
+                <button (click)="volverATienda()"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
+                    Volver a la Tienda
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pago Pendiente -->
+    <main class="flex-1 container mx-auto p-6" *ngIf="!cargando && pagoPendiente">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-yellow-100 rounded-full mb-4">
+                    <svg class="w-12 h-12 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Pago en proceso</h2>
+                <p class="text-gray-600 mb-2">Tu pago está siendo verificado por Mercado Pago.</p>
+                <p class="text-gray-500 text-sm mb-6">Te notificaremos por correo cuando se confirme.</p>
+                <button (click)="volverATienda()"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
+                    Volver a la Tienda
+                </button>
+            </div>
+        </div>
+    </main>
+
     <!-- Contenido del recibo -->
-    <main class="flex-1 container mx-auto p-6" *ngIf="!cargando && recibo">
+    <main class="flex-1 container mx-auto p-6" *ngIf="!cargando && pagoAprobado && recibo">
         <div class="max-w-3xl mx-auto">
 
             <!-- Card principal -->
@@ -183,6 +224,25 @@
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                     Volver a la Tienda
+                </button>
+            </div>
+        </div>
+    </main>
+    <!-- Instrucción post-PSE cuando no hay status en URL -->
+    <main class="flex-1 container mx-auto p-6" *ngIf="!cargando && !statusMP && !recibo">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-yellow-100 rounded-full mb-4">
+                    <svg class="w-12 h-12 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">¿Ya realizaste tu pago?</h2>
+                <p class="text-gray-600 mb-6">Si pagaste por PSE, haz clic en el botón para ver tu confirmación.</p>
+                <button (click)="buscarPedidoPSE()"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
+                    Ver mi confirmación
                 </button>
             </div>
         </div>
