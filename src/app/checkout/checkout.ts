@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, isDevMode } from '@angular/core';
 import { CheckoutService } from '../services/checkout.service';
 import { CarritoService } from '../services/carrito.service'; // ← AGREGAR
 import { Router } from '@angular/router';
@@ -76,6 +76,12 @@ export class CheckoutComponent implements OnInit {
     direccion: this.datos.direccion
   }).subscribe({
     next: () => {
+      if (isDevMode()) {
+        localStorage.setItem('pedido_mp', numero_pedido);
+        this.router.navigate(['/pago']);
+        return;
+      }
+
       // Luego crea la preferencia en Mercado Pago
       this.checkoutService.crearPreferenciaMP(numero_pedido).subscribe({
         next: (resp) => {

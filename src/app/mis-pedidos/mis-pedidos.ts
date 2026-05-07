@@ -67,4 +67,8 @@ export class MisPedidosComponent implements OnInit {
       queryParams: { codigo: numeroPedido }
     });
   }
+
+  rastrearPedido(numeroPedido: string) {
+    this.router.navigate(['/pedidos', numeroPedido, 'rastreo']);
+  }
 }

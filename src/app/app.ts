@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
-import { TiendaComponent } from './tienda/tienda';
 import { RouterOutlet } from '@angular/router';
-import { NotificationsComponent } from './notifications'; // ← AGREGAR
+import { NotificationsComponent } from './notifications';
+import { ConfirmDialogComponent } from './confirm-dialog';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NotificationsComponent],
+  imports: [RouterOutlet, NotificationsComponent, ConfirmDialogComponent],
   template: `
     <router-outlet />
-    <app-notifications /> <!-- ← AGREGAR -->
-     `,
+    <app-notifications />
+    <app-confirm-dialog />
+  `,
   styleUrls: ['./app.css']
-  
 })
 export class AppComponent {}

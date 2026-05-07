@@ -24,7 +24,7 @@ export interface FiltrosProducto {
 
 @Injectable({ providedIn: 'root' })
 export class ProductosService {
-  private apiUrl = 'http://127.0.0.1:8000/api/productos/';
+  private apiUrl = '/api/productos/';
 
   constructor(private http: HttpClient) {}
 

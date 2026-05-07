@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 export class CheckoutService {
 
   // URL de tu backend
-  private backendUrl = 'http://localhost:8000/api/checkout/pago/';
-  private apiUrl = 'http://localhost:8000/api'; // ← AGREGAR ESTA LÍNEA
+  private backendUrl = '/api/checkout/pago/';
+  private apiUrl = '/api';
 
   constructor(private http: HttpClient) {}
 
@@ -28,6 +28,10 @@ export class CheckoutService {
     return this.http.post(`${this.apiUrl}/pagos/crear-preferencia/`, {
       numero_pedido: numeroPedido
     });
+  }
+
+  aprobarPagoDemo(numeroPedido: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/pagos/demo-aprobado/${numeroPedido}/`, {});
   }
 
   // Consultar estado del pago

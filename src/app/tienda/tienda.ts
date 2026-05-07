@@ -6,6 +6,7 @@ import { AuthService } from '../services/auth.service';
 import { RouterLink } from '@angular/router';
 import { CarritoService } from '../services/carrito.service';
 import { NotificationService } from '../services/notification.service'; // ← AGREGAR
+import { ConfirmDialogService } from '../services/confirm-dialog.service';
 
 interface Producto {
   id?: number;
@@ -96,7 +97,8 @@ export class TiendaComponent implements OnInit {
     private authService: AuthService,
     private carritoService: CarritoService,
     private cdr: ChangeDetectorRef,
-    private notificationService: NotificationService // ← AGREGAR
+    private notificationService: NotificationService, // ← AGREGAR
+    private confirmDialogService: ConfirmDialogService
   ) {}
 
   ngOnInit(): void {
@@ -341,12 +343,19 @@ export class TiendaComponent implements OnInit {
   }
 
   // Eliminar producto
-  eliminarProducto(id: number, event?: Event) {
+  async eliminarProducto(id: number, event?: Event) {
     if (event) {
       event.stopPropagation();
     }
 
-    if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
+    const confirmar = await this.confirmDialogService.request({
+      title: 'Eliminar producto',
+      message: 'Esta accion quitara el producto del catalogo de SportZoom.',
+      cancelText: 'Cancelar',
+      confirmText: 'Eliminar producto'
+    });
+
+    if (!confirmar) return;
 
     const headers = this.authService.obtenerCabeceraAuth();
 

@@ -1,0 +1,103 @@
+<div class="min-h-screen bg-gray-50 text-gray-800">
+  <header class="flex items-center justify-between border-b bg-white p-4 shadow-sm">
+    <a routerLink="/tienda" class="cursor-pointer text-2xl font-bold text-blue-600">SportZoom</a>
+    <nav class="flex items-center gap-4 text-sm font-medium">
+      <a routerLink="/mis-pedidos" class="text-gray-600 transition hover:text-blue-600">Mis pedidos</a>
+      <a routerLink="/tienda" class="text-gray-600 transition hover:text-blue-600">Tienda</a>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-5xl px-4 py-8">
+    <div *ngIf="cargando" class="rounded-xl border bg-white p-10 text-center text-gray-500 shadow-sm">
+      Cargando rastreo...
+    </div>
+
+    <div *ngIf="!cargando && error" class="rounded-xl border border-red-200 bg-red-50 p-5 text-red-700">
+      {{ error }}
+    </div>
+
+    <section *ngIf="!cargando && !error && pedido" class="space-y-6">
+      <div class="rounded-xl border bg-white p-5 shadow-sm md:p-6">
+        <div class="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-wide text-blue-600">Rastreo de pedido</p>
+            <h1 class="mt-1 text-2xl font-bold text-gray-900">Pedido #{{ pedido.numero_pedido }}</h1>
+            <p class="mt-2 text-sm text-gray-500">
+              Compra realizada el {{ pedido.fecha | date:'dd/MM/yyyy HH:mm' }}
+            </p>
+          </div>
+
+          <div class="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm">
+            <p class="font-semibold text-blue-800">Entrega estimada</p>
+            <p class="mt-1 text-blue-700">{{ fechaEstimada | date:'EEEE d MMMM' }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="!imagenesListas" class="mt-6 flex items-center gap-3 overflow-x-auto pb-1">
+          <div class="flex h-32 min-w-32 flex-col items-center justify-center gap-3 rounded-lg border bg-white p-3 text-center text-sm text-gray-500">
+            <div class="h-16 w-16 animate-pulse rounded-lg bg-gray-200"></div>
+            <span>Cargando productos...</span>
+          </div>
+        </div>
+
+        <div *ngIf="imagenesListas" class="mt-6 flex gap-3 overflow-x-auto pb-1">
+          <div *ngFor="let producto of productos" class="flex min-w-24 flex-col items-center gap-2 rounded-lg border bg-white p-2">
+            <img
+              *ngIf="producto.imagen"
+              [src]="producto.imagen"
+              [alt]="producto.nombre"
+              class="h-24 w-24 rounded-lg border object-cover"
+            />
+            <div *ngIf="!producto.imagen" class="flex h-24 w-24 items-center justify-center rounded-lg border bg-gray-100 text-sm font-semibold text-gray-400">
+              SZ
+            </div>
+            <p class="line-clamp-2 max-w-24 text-center text-xs font-medium text-gray-700">{{ producto.nombre }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-xl border bg-white p-5 shadow-sm md:p-6">
+        <div class="relative px-2 py-6">
+          <div class="absolute left-8 right-8 top-11 h-1 rounded-full bg-gray-200"></div>
+          <div class="absolute left-8 top-11 h-1 rounded-full bg-blue-600 transition-all"
+            [style.width]="'calc((100% - 4rem) * ' + (porcentajeProgreso / 100) + ')'"></div>
+
+          <div class="relative grid grid-cols-4 gap-2">
+            <div *ngFor="let step of steps; let i = index" class="flex flex-col items-center gap-3 text-center">
+              <div class="z-10 flex h-11 w-11 items-center justify-center rounded-full border-4 bg-white"
+                [ngClass]="stepCompletado(i) ? 'border-blue-600 text-blue-600' : 'border-gray-200 text-gray-400'">
+                <svg *ngIf="stepCompletado(i)" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span *ngIf="!stepCompletado(i)" class="text-sm font-bold">{{ i + 1 }}</span>
+              </div>
+              <div>
+                <p class="text-sm font-bold" [ngClass]="stepCompletado(i) ? 'text-gray-900' : 'text-gray-400'">
+                  {{ step.label }}
+                </p>
+                <p *ngIf="i === estadoIndex" class="mt-1 text-xs font-medium text-blue-600">Estado actual</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border bg-white p-5 shadow-sm">
+          <p class="text-sm font-semibold text-gray-500">Direccion de entrega</p>
+          <p class="mt-2 font-medium text-gray-900">{{ pedido.direccion || 'Direccion pendiente' }}</p>
+        </div>
+
+        <div class="rounded-xl border bg-white p-5 shadow-sm">
+          <p class="text-sm font-semibold text-gray-500">Numero de guia</p>
+          <p class="mt-2 font-bold text-gray-900">{{ guia }}</p>
+        </div>
+
+        <div class="rounded-xl border bg-white p-5 shadow-sm">
+          <p class="text-sm font-semibold text-gray-500">Total pagado</p>
+          <p class="mt-2 font-bold text-blue-700">{{ pedido.total | currency:'COP ':'symbol':'1.0-0' }}</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

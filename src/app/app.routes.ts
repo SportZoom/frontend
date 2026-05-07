@@ -4,11 +4,13 @@ import { TiendaComponent } from './tienda/tienda';
 import { CarritoComponent } from './carrito/carrito';
 import { CheckoutComponent } from './checkout/checkout';
 import { ConfirmacionComponent } from './confirmacion/confirmacion';
+import { PagoComponent } from './pago/pago';
 import { AdminPedidosComponent } from './admin-pedidos/admin-pedidos';
 import { ConsultaPedidoComponent } from './consulta-pedido/consulta-pedido';
 import { adminGuard } from './guards/admin.guard';
 import { RegistroComponent } from './registro/registro';
 import { MisPedidosComponent } from './mis-pedidos/mis-pedidos';
+import { RastreoPedidoComponent } from './rastreo-pedido/rastreo-pedido';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'tienda', pathMatch: 'full' },
@@ -16,9 +18,11 @@ export const routes: Routes = [
   { path: 'tienda', component: TiendaComponent },
   { path: 'carrito', component: CarritoComponent },
   { path: 'checkout', component: CheckoutComponent },
+  { path: 'pago', component: PagoComponent },
   { path: 'confirmacion', component: ConfirmacionComponent },
   { path: 'consulta-pedido', component: ConsultaPedidoComponent },
   { path: 'admin/pedidos', component: AdminPedidosComponent, canActivate: [adminGuard] },
   { path: 'registro', component: RegistroComponent },
   { path: 'mis-pedidos', component: MisPedidosComponent },
+  { path: 'pedidos/:codigo/rastreo', component: RastreoPedidoComponent },
 ];

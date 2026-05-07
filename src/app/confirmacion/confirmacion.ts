@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { CheckoutService } from '../services/checkout.service';
+import { NotificationService } from '../services/notification.service';
 import jsPDF from 'jspdf';
 
 @Component({
@@ -20,6 +21,7 @@ export class ConfirmacionComponent implements OnInit {
     public router: Router,
     private route: ActivatedRoute,
     private checkoutService: CheckoutService,
+    private notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
@@ -203,7 +205,7 @@ export class ConfirmacionComponent implements OnInit {
 
       doc.save(`recibo_${this.recibo.numero_pedido || Date.now()}.pdf`);
     } catch (error) {
-      alert('Error al generar el PDF. Intenta nuevamente.');
+      this.notificationService.error('Error al generar el PDF. Intenta nuevamente.');
     }
   }
 
@@ -237,7 +239,7 @@ export class ConfirmacionComponent implements OnInit {
         },
         error: () => {
           this.cargando = false;
-          alert('No se encontró el pedido. Verifica tu correo.');
+          this.notificationService.error('No se encontro el pedido. Verifica tu correo.');
         },
       });
     } else {

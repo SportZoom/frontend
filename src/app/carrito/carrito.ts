@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { CarritoService } from '../services/carrito.service';
 import { HttpClient } from '@angular/common/http';
+import { NotificationService } from '../services/notification.service';
+import { ConfirmDialogService } from '../services/confirm-dialog.service';
 
 @Component({
   selector: 'app-carrito',
@@ -16,7 +18,9 @@ export class CarritoComponent implements OnInit {
   constructor(
     private carritoService: CarritoService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private notificationService: NotificationService,
+    private confirmDialogService: ConfirmDialogService
   ) {}
 
   ngOnInit(): void {
@@ -31,10 +35,17 @@ export class CarritoComponent implements OnInit {
     this.carritoService.eliminarProducto(id);
   }
 
-  vaciarCarrito(): void {
-    const confirmar = confirm('¿Seguro que deseas vaciar el carrito?');
+  async vaciarCarrito(): Promise<void> {
+    const confirmar = await this.confirmDialogService.request({
+      title: 'Vaciar carrito',
+      message: 'Se eliminaran todos los productos que tienes agregados al carrito.',
+      cancelText: 'Cancelar',
+      confirmText: 'Vaciar carrito'
+    });
+
     if (confirmar) {
       this.carritoService.limpiarCarrito();
+      this.notificationService.info('Carrito vaciado');
     }
   }
 
@@ -51,33 +62,29 @@ export class CarritoComponent implements OnInit {
   }
 
   finalizarCompra() {
-    // Payload para crear pedido (SIN datos personales)
     const pedidoPayload = {
-      nombre: '',  // ← Vacío, se completará en checkout
-      email: '',   // ← Vacío, se completará en checkout
-      direccion: '', // ← Vacío, se completará en checkout
+      nombre: '',
+      email: '',
+      direccion: '',
       total: this.total,
       carrito: this.productos.map(p => ({
         id: p.id,
         nombre: p.nombre,
         precio: p.precio,
-        cantidad: p.cantidad || 1
+        cantidad: p.cantidad || 1,
+        imagen: p.imagen
       }))
     };
 
-    // Crear pedido en el backend
     this.http.post('http://localhost:8000/api/checkout/crear-pedido/', pedidoPayload)
       .subscribe({
         next: (resp: any) => {
-          // Guardar el numero_pedido en localStorage
           localStorage.setItem('numero_pedido', resp.numero_pedido);
-
-          // Redirigir al checkout
           this.router.navigate(['/checkout']);
         },
         error: (err) => {
           console.error('Error al crear pedido:', err);
-          alert('Error al crear el pedido, intenta de nuevo.');
+          this.notificationService.error('Error al crear el pedido, intenta de nuevo.');
         }
       });
   }
