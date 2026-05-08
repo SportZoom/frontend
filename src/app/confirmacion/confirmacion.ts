@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { CheckoutService } from '../services/checkout.service';
+import { CarritoService } from '../services/carrito.service';
 import { NotificationService } from '../services/notification.service';
 import jsPDF from 'jspdf';
 
@@ -22,6 +23,7 @@ export class ConfirmacionComponent implements OnInit {
     private route: ActivatedRoute,
     private checkoutService: CheckoutService,
     private notificationService: NotificationService,
+    private carritoService: CarritoService,
   ) {}
 
   ngOnInit() {
@@ -54,6 +56,7 @@ export class ConfirmacionComponent implements OnInit {
             // Limpiar datos temporales
             localStorage.removeItem('numero_pedido');
             localStorage.removeItem('pedido_mp');
+            this.carritoService.limpiarCarrito();
             this.cargando = false;
           },
           error: () => {
@@ -110,6 +113,7 @@ export class ConfirmacionComponent implements OnInit {
           localStorage.setItem('ultimo_recibo', JSON.stringify(this.recibo));
           localStorage.removeItem('pedido_mp');
           localStorage.removeItem('numero_pedido');
+          this.carritoService.limpiarCarrito();
           this.cargando = false;
         },
         error: () => {
@@ -235,6 +239,7 @@ export class ConfirmacionComponent implements OnInit {
           localStorage.setItem('ultimo_recibo', JSON.stringify(this.recibo));
           localStorage.removeItem('pedido_mp');
           localStorage.removeItem('numero_pedido');
+          this.carritoService.limpiarCarrito();
           this.cargando = false;
         },
         error: () => {
