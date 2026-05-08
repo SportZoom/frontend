@@ -1,4 +1,4 @@
-import { provideZonelessChangeDetection } from '@angular/core';
+import { provideZoneChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app';
 
@@ -6,7 +6,7 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [provideZonelessChangeDetection()]
+      providers: [provideZoneChangeDetection()]
     }).compileComponents();
   });
 
@@ -16,10 +16,10 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', () => {
+  it('should have router-outlet in template', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, frontend');
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });

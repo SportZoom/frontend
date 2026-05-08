@@ -1,18 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import { ConsultaPedido } from './consulta-pedido';
+import { ConsultaPedidoComponent } from './consulta-pedido';
+import { CheckoutService } from '../services/checkout.service';
+import { CarritoService } from '../services/carrito.service';
 
-describe('ConsultaPedido', () => {
-  let component: ConsultaPedido;
-  let fixture: ComponentFixture<ConsultaPedido>;
+describe('ConsultaPedidoComponent', () => {
+  let component: ConsultaPedidoComponent;
+  let fixture: ComponentFixture<ConsultaPedidoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConsultaPedido]
-    })
-    .compileComponents();
+      imports: [ConsultaPedidoComponent, HttpClientTestingModule, RouterTestingModule],
+      providers: [CheckoutService, CarritoService]
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(ConsultaPedido);
+    fixture = TestBed.createComponent(ConsultaPedidoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
