@@ -40,7 +40,7 @@ interface Usuario {
   ]
 })
 export class TiendaComponent implements OnInit {
-  apiUrl = 'http://127.0.0.1:8000/api';
+  apiUrl = 'https://tienda-backend-2g3c.onrender.com/api';
   productos: Producto[] = [];
   productoSeleccionado: Producto | null = null;
 

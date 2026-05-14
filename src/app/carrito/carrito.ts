@@ -76,7 +76,7 @@ export class CarritoComponent implements OnInit {
       }))
     };
 
-    this.http.post('http://localhost:8000/api/checkout/crear-pedido/', pedidoPayload)
+    this.http.post('https://tienda-backend-2g3c.onrender.com/api/checkout/crear-pedido/', pedidoPayload)
       .subscribe({
         next: (resp: any) => {
           localStorage.setItem('numero_pedido', resp.numero_pedido);

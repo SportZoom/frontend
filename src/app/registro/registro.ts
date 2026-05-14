@@ -22,7 +22,7 @@ export class RegistroComponent {
   errorMsg = '';
   exitoso = false;
 
-  private apiUrl = 'http://localhost:8000/api/clientes/registro/';
+  private apiUrl = 'https://tienda-backend-2g3c.onrender.com/api/clientes/registro/';
 
   constructor(private http: HttpClient, private router: Router) {}
 

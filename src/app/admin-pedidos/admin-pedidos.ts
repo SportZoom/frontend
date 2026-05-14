@@ -16,7 +16,7 @@ export class AdminPedidosComponent implements OnInit {
   pedidos: any[] = [];
   pedidosFiltrados: any[] = []; // ← AGREGAR
   cargando: boolean = false;
-  apiUrl = 'http://127.0.0.1:8000/api';
+  apiUrl = 'https://tienda-backend-2g3c.onrender.com/api';
 
   // Filtros
   filtroEstado: string = 'todos'; // ← AGREGAR
