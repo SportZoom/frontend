@@ -77,7 +77,7 @@ export class RastreoPedidoComponent implements OnInit {
   }
 
   get guia(): string {
-    return this.horasDesdePedido() >= 24 ? `COORD-${this.codigo}` : 'En preparacion';
+    return this.horasDesdePedido() >= 24 ? `COORD-${this.codigo}` : 'En preparación';
   }
 
   get fechaEstimada(): Date | null {
