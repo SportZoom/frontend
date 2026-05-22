@@ -40,7 +40,7 @@ export class MisPedidosComponent implements OnInit {
 
   cargarPedidos() {
     const headers = this.authService.obtenerCabeceraAuth();
-    this.http.get<any[]>('/api/clientes/mis-pedidos/', { headers }).subscribe({
+    this.http.get<any[]>('https://tienda-backend-2g3c.onrender.com/api/clientes/mis-pedidos/', { headers }).subscribe({
       next: (res) => {
         this.pedidos = res;
         this.cargando = false;
