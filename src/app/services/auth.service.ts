@@ -3,8 +3,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private baseUrl = '/api/token/';
-  private clienteLoginUrl = '/api/clientes/login/';
+  //private baseUrl = '/api/token/';
+  //private clienteLoginUrl = '/api/clientes/login/';
+  private baseUrl = 'https://tienda-backend-2g3c.onrender.com/api/token/';
+  private clienteLoginUrl = 'https://tienda-backend-2g3c.onrender.com/api/clientes/login/';
 
   constructor(private http: HttpClient) {}
 
