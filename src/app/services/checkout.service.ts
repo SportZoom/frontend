@@ -13,7 +13,7 @@ export class CheckoutService {
 
   constructor(private http: HttpClient) {}
 
-  // Confirmar pago 
+  // Confirmar pago
     confirmarPago(payload: any): Observable<any> {
     return this.http.post(this.backendUrl, payload);
   }
@@ -24,18 +24,18 @@ export class CheckoutService {
   }
 
   // Crear preferencia de Mercado Pago
-  crearPreferenciaMP(numeroPedido: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/pagos/crear-preferencia/`, {
-      numero_pedido: numeroPedido
-    });
-  }
+  // crearPreferenciaMP(numeroPedido: string): Observable<any> {
+  //   return this.http.post(`${this.apiUrl}/pagos/crear-preferencia/`, {
+  //     numero_pedido: numeroPedido
+  //   });
+  // }
 
   aprobarPagoDemo(numeroPedido: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/pagos/demo-aprobado/${numeroPedido}/`, {});
   }
 
   // Consultar estado del pago
-  estadoPagoMP(numeroPedido: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/pagos/estado/${numeroPedido}/`);
-  }
+  // estadoPagoMP(numeroPedido: string): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}/pagos/estado/${numeroPedido}/`);
+  // }
 }
