@@ -24,7 +24,7 @@ export interface FiltrosProducto {
 
 @Injectable({ providedIn: 'root' })
 export class ProductosService {
-  private apiUrl = '/api/productos/';
+  private apiUrl = 'https://tienda-backend-2g3c.onrender.com/api/productos/';
 
   constructor(private http: HttpClient) {}
 

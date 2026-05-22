@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 export class CheckoutService {
 
   // URL de tu backend
-  private backendUrl = '/api/checkout/pago/';
-  private apiUrl = '/api';
+  private backendUrl = 'https://tienda-backend-2g3c.onrender.com/api/checkout/pago/';
+  private apiUrl = 'https://tienda-backend-2g3c.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 
