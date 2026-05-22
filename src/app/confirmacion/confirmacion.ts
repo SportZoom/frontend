@@ -5,6 +5,7 @@ import { CheckoutService } from '../services/checkout.service';
 import { CarritoService } from '../services/carrito.service';
 import { NotificationService } from '../services/notification.service';
 import jsPDF from 'jspdf';
+import emailjs from '@emailjs/browser';
 
 @Component({
   selector: 'app-confirmacion',
@@ -26,6 +27,11 @@ export class ConfirmacionComponent implements OnInit {
     private carritoService: CarritoService,
   ) {}
 
+  // EmailJS configuration (client-side). If you change these values, update here.
+  private readonly EMAILJS_SERVICE_ID = 'service_sportzoom';
+  private readonly EMAILJS_TEMPLATE_ID = 'template_7z7kclu';
+  private readonly EMAILJS_PUBLIC_KEY = 'G7vZ4iZaaFd7smpNk';
+
   ngOnInit() {
     // Leer query params que envía Mercado Pago al redirigir
     const status = this.route.snapshot.queryParamMap.get('status');
@@ -41,23 +47,25 @@ export class ConfirmacionComponent implements OnInit {
         // Consultar el pedido al backend
         this.checkoutService.consultarPedido(externalRef).subscribe({
           next: (pedido) => {
-            this.recibo = {
-              numero_pedido: pedido.numero_pedido,
-              nombre: pedido.nombre,
-              email: pedido.email,
-              direccion: pedido.direccion,
-              total: pedido.total,
-              carrito: pedido.carrito,
-              fecha: new Date().toLocaleDateString('es-CO'),
-              payment_id: paymentId,
-            };
-            // Guardar en localStorage como respaldo
-            localStorage.setItem('ultimo_recibo', JSON.stringify(this.recibo));
-            // Limpiar datos temporales
-            localStorage.removeItem('numero_pedido');
-            localStorage.removeItem('pedido_mp');
-            this.carritoService.limpiarCarrito();
-            this.cargando = false;
+          this.recibo = {
+            numero_pedido: pedido.numero_pedido,
+            nombre: pedido.nombre,
+            email: pedido.email,
+            direccion: pedido.direccion,
+            total: pedido.total,
+            carrito: pedido.carrito,
+            fecha: new Date().toLocaleDateString('es-CO'),
+            payment_id: paymentId,
+          };
+          // Guardar en localStorage como respaldo
+          localStorage.setItem('ultimo_recibo', JSON.stringify(this.recibo));
+          // Intentar enviar email (si corresponde)
+          this.enviarEmailRecibo();
+          // Limpiar datos temporales
+          localStorage.removeItem('numero_pedido');
+          localStorage.removeItem('pedido_mp');
+          this.carritoService.limpiarCarrito();
+          this.cargando = false;
           },
           error: () => {
             // Si falla la consulta, intentar desde localStorage
@@ -93,6 +101,8 @@ export class ConfirmacionComponent implements OnInit {
         this.recibo = JSON.parse(reciboGuardado);
         this.statusMP = 'approved';
         this.cargando = false;
+        // Enviar correo al cargar desde respaldo
+        this.enviarEmailRecibo();
       } catch (e) {
         this.cargando = false;
       }
@@ -111,6 +121,8 @@ export class ConfirmacionComponent implements OnInit {
           };
           this.statusMP = 'approved';
           localStorage.setItem('ultimo_recibo', JSON.stringify(this.recibo));
+          // Enviar email tras reconstruir recibo
+          this.enviarEmailRecibo();
           localStorage.removeItem('pedido_mp');
           localStorage.removeItem('numero_pedido');
           this.carritoService.limpiarCarrito();
@@ -218,6 +230,39 @@ export class ConfirmacionComponent implements OnInit {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(precio);
+  }
+
+  // Envia el email con EmailJS si no se ha enviado antes para este pedido.
+  private enviarEmailRecibo() {
+    if (!this.recibo || !this.recibo.email) return;
+
+    const pedidoId = this.recibo.numero_pedido || (this.recibo as any).numero_pedido;
+    if (!pedidoId) return;
+
+    const flagKey = `email_enviado_${pedidoId}`;
+    if (localStorage.getItem(flagKey)) return; // ya enviado
+
+    const templateParams: Record<string, any> = {
+      to_name: this.recibo.nombre || '',
+      to_email: this.recibo.email,
+      numero_pedido: pedidoId,
+      total: this.recibo.total || 0,
+      // puedes añadir más campos según tu plantilla
+    };
+
+    emailjs.send(this.EMAILJS_SERVICE_ID, this.EMAILJS_TEMPLATE_ID, templateParams, this.EMAILJS_PUBLIC_KEY)
+      .then(() => {
+        localStorage.setItem(flagKey, '1');
+        this.notificationService && this.notificationService.success
+          ? this.notificationService.success('Hemos enviado el correo de confirmación.')
+          : console.log('Email enviado a', this.recibo.email);
+      })
+      .catch((err) => {
+        console.error('Error enviando email con EmailJS', err);
+        this.notificationService && this.notificationService.error
+          ? this.notificationService.error('No se pudo enviar el correo de confirmación. Intenta más tarde.')
+          : null;
+      });
   }
 
   buscarPedidoPSE() {

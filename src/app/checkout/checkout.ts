@@ -5,7 +5,6 @@ import { CarritoService } from '../services/carrito.service'; // ← AGREGAR
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import emailjs from '@emailjs/browser';
 
 @Component({
   selector: 'app-checkout',
@@ -27,9 +26,7 @@ export class CheckoutComponent implements OnInit {
   cargando = false;
   error = '';
 
-  private readonly EMAILJS_SERVICE_ID = 'service_sportzoom';
-  private readonly EMAILJS_TEMPLATE_ID = 'template_7z7kclu';
-  private readonly EMAILJS_PUBLIC_KEY = 'G7vZ4iZaaFd7smpNk';
+  
 
   constructor(
     private checkoutService: CheckoutService,
