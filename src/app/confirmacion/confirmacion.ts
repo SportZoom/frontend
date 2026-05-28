@@ -240,36 +240,42 @@ export class ConfirmacionComponent implements OnInit {
 
   // Envia el email con EmailJS si no se ha enviado antes para este pedido.
   private enviarEmailRecibo() {
-    if (!this.recibo || !this.recibo.email) return;
+  if (!this.recibo || !this.recibo.email) return;
 
-    const pedidoId = this.recibo.numero_pedido || (this.recibo as any).numero_pedido;
-    if (!pedidoId) return;
+  const pedidoId = this.recibo.numero_pedido;
+  if (!pedidoId) return;
 
-    const flagKey = `email_enviado_${pedidoId}`;
-    if (localStorage.getItem(flagKey)) return; // ya enviado
+  const flagKey = `email_enviado_${pedidoId}`;
+  if (localStorage.getItem(flagKey)) return;
 
-    const templateParams: Record<string, any> = {
-      to_name: this.recibo.nombre || '',
-      to_email: this.recibo.email,
-      numero_pedido: pedidoId,
-      total: this.recibo.total || 0,
-      // puedes añadir más campos según tu plantilla
-    };
+  const productosHtml = (this.recibo.carrito || []).map((item: any) => `
+    <tr>
+      <td>${item.nombre || item.producto || 'Producto'}</td>
+      <td style="text-align: center;">${item.cantidad || 1}</td>
+      <td style="text-align: right;">COP $${new Intl.NumberFormat('es-CO').format(item.precio || 0)}</td>
+    </tr>
+  `).join('');
 
-    emailjs.send(this.EMAILJS_SERVICE_ID, this.EMAILJS_TEMPLATE_ID, templateParams, this.EMAILJS_PUBLIC_KEY)
-      .then(() => {
-        localStorage.setItem(flagKey, '1');
-        this.notificationService && this.notificationService.success
-          ? this.notificationService.success('Hemos enviado el correo de confirmación.')
-          : console.log('Email enviado a', this.recibo.email);
-      })
-      .catch((err) => {
-        console.error('Error enviando email con EmailJS', err);
-        this.notificationService && this.notificationService.error
-          ? this.notificationService.error('No se pudo enviar el correo de confirmación. Intenta más tarde.')
-          : null;
-      });
-  }
+  const templateParams: Record<string, any> = {
+    to_name: this.recibo.nombre || '',
+    to_email: this.recibo.email,
+    numero_pedido: pedidoId,
+    fecha: this.recibo.fecha || new Date().toLocaleDateString('es-CO'),
+    direccion: this.recibo.direccion || 'No especificada',
+    total: new Intl.NumberFormat('es-CO').format(this.recibo.total || 0),
+    productos: productosHtml,
+  };
+
+  emailjs.send(this.EMAILJS_SERVICE_ID, this.EMAILJS_TEMPLATE_ID, templateParams, this.EMAILJS_PUBLIC_KEY)
+    .then(() => {
+      localStorage.setItem(flagKey, '1');
+      this.notificationService.success('Hemos enviado el correo de confirmación.');
+    })
+    .catch((err) => {
+      console.error('EmailJS error:', err.status, err.text);
+      this.notificationService.error('No se pudo enviar el correo de confirmación. Intenta más tarde.');
+    });
+}
 
   buscarPedidoPSE() {
     const pedidoMp = localStorage.getItem('pedido_mp') || localStorage.getItem('numero_pedido');
