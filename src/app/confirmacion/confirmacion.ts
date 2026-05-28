@@ -47,6 +47,7 @@ export class ConfirmacionComponent implements OnInit {
         // Consultar el pedido al backend
         this.checkoutService.consultarPedido(externalRef).subscribe({
           next: (pedido) => {
+          console.log('PEDIDO BACKEND:', JSON.stringify(pedido));
           this.recibo = {
             numero_pedido: pedido.numero_pedido,
             nombre: pedido.nombre,
@@ -54,7 +55,9 @@ export class ConfirmacionComponent implements OnInit {
             direccion: pedido.direccion,
             total: pedido.total,
             carrito: pedido.carrito,
-            fecha: new Date().toLocaleDateString('es-CO'),
+            fecha: pedido.fecha
+              ? new Date(pedido.fecha).toLocaleDateString('es-CO')
+              : new Date().toLocaleDateString('es-CO'),
             payment_id: paymentId,
           };
           // Guardar en localStorage como respaldo
@@ -110,6 +113,7 @@ export class ConfirmacionComponent implements OnInit {
       // Viene de PSE — consulta el pedido al backend
       this.checkoutService.consultarPedido(pedidoMp).subscribe({
         next: (pedido) => {
+          console.log('PEDIDO BACKEND:', JSON.stringify(pedido));
           this.recibo = {
             numero_pedido: pedido.numero_pedido,
             nombre: pedido.nombre,
@@ -117,7 +121,9 @@ export class ConfirmacionComponent implements OnInit {
             direccion: pedido.direccion,
             total: pedido.total,
             carrito: pedido.carrito,
-            fecha: new Date().toLocaleDateString('es-CO'),
+            fecha: pedido.fecha
+              ? new Date(pedido.fecha).toLocaleDateString('es-CO')
+              :  new Date().toLocaleDateString('es-CO'),
           };
           this.statusMP = 'approved';
           localStorage.setItem('ultimo_recibo', JSON.stringify(this.recibo));
@@ -271,6 +277,7 @@ export class ConfirmacionComponent implements OnInit {
       this.cargando = true;
       this.checkoutService.consultarPedido(pedidoMp).subscribe({
         next: (pedido) => {
+          console.log('PEDIDO BACKEND:', JSON.stringify(pedido));
           this.recibo = {
             numero_pedido: pedido.numero_pedido,
             nombre: pedido.nombre,
@@ -278,7 +285,9 @@ export class ConfirmacionComponent implements OnInit {
             direccion: pedido.direccion,
             total: pedido.total,
             carrito: pedido.carrito,
-            fecha: new Date().toLocaleDateString('es-CO'),
+            fecha: pedido.fecha
+              ? new Date(pedido.fecha).toLocaleDateString('es-CO')
+              : new Date().toLocaleDateString('es-CO'),
           };
           this.statusMP = 'approved';
           localStorage.setItem('ultimo_recibo', JSON.stringify(this.recibo));
