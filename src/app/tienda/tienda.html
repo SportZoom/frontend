@@ -127,23 +127,24 @@
     </div>
 
     <!-- Mobile drawer -->
-    <div *ngIf="isFiltersOpen" class="fixed inset-0 z-40 lg:hidden">
-      <div class="absolute inset-0 bg-black/40" (click)="toggleFilters()"></div>
-      <aside class="absolute bottom-0 left-0 right-0 bg-white p-4 rounded-t-lg max-h-[75vh] overflow-auto animate-slide-in">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="font-bold text-lg">Filtros</h3>
-          <button (click)="toggleFilters()" aria-label="Cerrar filtros" class="p-2">
-            ✕
+    <div *ngIf="isFiltersOpen" class="fixed inset-0 z-[100] lg:hidden flex flex-col justify-end">
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" (click)="toggleFilters()"></div>
+      <aside class="relative w-full bg-white p-5 rounded-t-2xl max-h-[85vh] overflow-y-auto shadow-xl flex flex-col gap-4">
+        <div class="flex items-center justify-between pb-2 border-b">
+          <h3 class="font-bold text-xl flex items-center gap-2">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Filtros
+          </h3>
+          <button (click)="toggleFilters()" aria-label="Cerrar filtros" class="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
-        <div class="w-full lg:w-72 bg-white border rounded-xl p-5 shadow-sm space-y-4">
-        <h2 class="font-bold text-xl mb-4 text-gray-800 border-b pb-2 flex items-center gap-2">
-          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-          </svg>
-          Filtros
-        </h2>
+        <div class="w-full bg-white space-y-4">
+        <!-- Header was moved up, start filters here -->
 
         <!-- Buscar por nombre -->
         <div>
@@ -265,14 +266,14 @@
       </div>
 
       <!-- Grid de productos -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-min flex-1">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 flex-1">
         <p *ngIf="cargando" class="col-span-full text-center text-gray-500">Cargando productos...</p>
 
         <div *ngFor="let p of productos" (click)="verDetalle(p)" [class.border-blue-500]="productoSeleccionado === p"
           class="border bg-white rounded-xl shadow-sm hover:shadow-md transition p-4 flex flex-col cursor-pointer">
-          <img [src]="p.imagen" [alt]="p.nombre" class="w-full h-40 sm:h-44 md:h-56 object-cover rounded-lg mb-3" loading="lazy" />
+          <img [src]="p.imagen" [alt]="p.nombre" class="w-full aspect-square object-cover rounded-lg mb-3" loading="lazy" />
           <div class="flex-1 space-y-1">
-            <h3 class="font-semibold text-lg truncate">{{ p.nombre }}</h3>
+            <h3 class="font-semibold text-lg line-clamp-2 leading-tight" [title]="p.nombre">{{ p.nombre }}</h3>
             <p class="text-green-600 font-bold flex items-center gap-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
