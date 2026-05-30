@@ -38,6 +38,10 @@ export class RegistroComponent {
       this.errorMsg = 'Las contraseñas no coinciden.';
       return;
     }
+    if (this.password.length < 8 || !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(this.password)) {
+      this.errorMsg = 'La contraseña debe tener mínimo 8 caracteres e incluir mayúsculas, minúsculas y números.';
+      return;
+    }
     if (!this.aceptaTerminos) {
       this.errorMsg = 'Debes aceptar los términos y condiciones.';
       return;

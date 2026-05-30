@@ -24,6 +24,9 @@ export class LoginComponent {
 
   cargando = false;
   errorMsg = '';
+  
+  mostrarPasswordCliente = false;
+  mostrarPasswordAdmin = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
