@@ -37,7 +37,6 @@ interface Usuario {
     CommonModule,
     FormsModule,
     HttpClientModule,
-    RouterLink,
     HeaderComponent
   ]
 })

@@ -10,7 +10,7 @@ import { NotificationService } from '../services/notification.service';
 @Component({
   selector: 'app-admin-pedidos',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, HeaderComponent], // ← AGREGAR FormsModule
+  imports: [CommonModule, FormsModule, HeaderComponent], // ← AGREGAR FormsModule
   templateUrl: './admin-pedidos.html'
 })
 export class AdminPedidosComponent implements OnInit {
