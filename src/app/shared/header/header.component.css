@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+/* mejora el área táctil del menú móvil */
+button {
+  line-height: 0;
+}

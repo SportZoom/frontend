@@ -1,0 +1,49 @@
+<header class="flex justify-between items-center p-4 bg-white shadow-sm border-b">
+  <div class="flex items-center gap-3">
+    <button class="md:hidden p-2 rounded hover:bg-gray-100" (click)="toggleMobileMenu()" aria-label="Abrir menú">
+      <!-- Simple hamburger -->
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <a routerLink="/tienda" class="cursor-pointer text-2xl font-bold text-blue-600">SportZoom</a>
+  </div>
+
+  <!-- Desktop links -->
+  <nav class="hidden md:flex gap-4 items-center">
+    <a routerLink="/carrito" class="relative flex items-center gap-2 hover:text-blue-600 transition">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+      Carrito
+      <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse" *ngIf="false">0</span>
+    </a>
+    <a routerLink="/mis-pedidos" class="flex items-center gap-2 hover:text-blue-600 transition">Pedidos</a>
+    <a routerLink="/login" class="rounded-full border px-4 py-2 hover:bg-gray-100 transition flex items-center gap-2">Iniciar sesión</a>
+    <a routerLink="/registro" class="rounded-full bg-blue-600 text-white px-4 py-2 hover:bg-blue-700 transition flex items-center gap-2">Registrarse</a>
+  </nav>
+
+  <!-- Mobile menu drawer -->
+  <div *ngIf="isMobileMenuOpen" class="fixed inset-0 z-40">
+    <div class="absolute inset-0 bg-black/40" (click)="closeMobileMenu()"></div>
+    <nav class="absolute right-0 top-0 w-64 h-full bg-white p-4 animate-slide-in">
+      <div class="flex items-center justify-between mb-4">
+        <a routerLink="/tienda" (click)="closeMobileMenu()" class="text-lg font-bold text-blue-600">SportZoom</a>
+        <button class="p-2" (click)="closeMobileMenu()" aria-label="Cerrar menú">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <ul class="space-y-3">
+        <li><a routerLink="/carrito" (click)="closeMobileMenu()" class="block">Carrito</a></li>
+        <li><a routerLink="/mis-pedidos" (click)="closeMobileMenu()" class="block">Pedidos</a></li>
+        <li><a routerLink="/login" (click)="closeMobileMenu()" class="block">Iniciar sesión</a></li>
+        <li><a routerLink="/registro" (click)="closeMobileMenu()" class="block">Registrarse</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

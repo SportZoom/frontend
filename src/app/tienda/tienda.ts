@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { RouterLink } from '@angular/router';
+import { HeaderComponent } from '../shared/header/header.component';
 import { CarritoService } from '../services/carrito.service';
 import { NotificationService } from '../services/notification.service'; // ← AGREGAR
 import { ConfirmDialogService } from '../services/confirm-dialog.service';
@@ -36,7 +37,8 @@ interface Usuario {
     CommonModule,
     FormsModule,
     HttpClientModule,
-    RouterLink
+    RouterLink,
+    HeaderComponent
   ]
 })
 export class TiendaComponent implements OnInit {
@@ -66,6 +68,8 @@ export class TiendaComponent implements OnInit {
 
   cargando: boolean = false;
   usuario: Usuario | null = null;
+  // UI state
+  isFiltersOpen: boolean = false;
 
   // Opciones disponibles
   marcasDisponibles: string[] = [
@@ -172,6 +176,8 @@ export class TiendaComponent implements OnInit {
     console.log('🔍 APLICAR FILTROS LLAMADO');
     this.paginaActual = 1;
     this.cargarProductos();
+    // close mobile filters if open
+    this.isFiltersOpen = false;
   }
 
   // Limpiar todos los filtros
@@ -184,6 +190,10 @@ export class TiendaComponent implements OnInit {
     this.paginaActual = 1;
     this.cargarProductos();
     this.notificationService.info('Filtros limpiados'); // ← AGREGAR
+  }
+
+  toggleFilters() {
+    this.isFiltersOpen = !this.isFiltersOpen;
   }
 
   // Navegación de paginación

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
+import { HeaderComponent } from '../shared/header/header.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { CarritoService } from '../services/carrito.service';
@@ -8,7 +9,7 @@ import { CarritoService } from '../services/carrito.service';
 @Component({
   selector: 'app-mis-pedidos',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, HeaderComponent],
   templateUrl: './mis-pedidos.html',
 })
 export class MisPedidosComponent implements OnInit {

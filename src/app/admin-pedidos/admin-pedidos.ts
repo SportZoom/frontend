@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms'; // ← AGREGAR
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { RouterLink } from '@angular/router';
+import { HeaderComponent } from '../shared/header/header.component';
 import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-admin-pedidos',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule], // ← AGREGAR FormsModule
+  imports: [CommonModule, RouterLink, FormsModule, HeaderComponent], // ← AGREGAR FormsModule
   templateUrl: './admin-pedidos.html'
 })
 export class AdminPedidosComponent implements OnInit {

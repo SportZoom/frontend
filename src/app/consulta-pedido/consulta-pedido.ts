@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, ActivatedRoute } from '@angular/router';
+import { HeaderComponent } from '../shared/header/header.component';
 import { CheckoutService } from '../services/checkout.service';
 import { CarritoService } from '../services/carrito.service';
 
 @Component({
   selector: 'app-consulta-pedido',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, HeaderComponent],
   templateUrl: './consulta-pedido.html',
 })
 export class ConsultaPedidoComponent {
