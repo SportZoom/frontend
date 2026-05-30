@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
-import { RouterLink } from '@angular/router';
+// RouterLink not required here; header component handles routing links
 import { HeaderComponent } from '../shared/header/header.component';
 import { CarritoService } from '../services/carrito.service';
 import { NotificationService } from '../services/notification.service'; // ← AGREGAR

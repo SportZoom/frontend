@@ -3,7 +3,7 @@
 
   <div class="flex flex-1 flex-col lg:flex-row gap-6 p-6">
   <!-- 🔍 PANEL DE FILTROS MEJORADO -->
-    <ng-template #filtersTemplate>
+    <div class="hidden lg:block">
       <div class="w-full lg:w-72 bg-white border rounded-xl p-5 shadow-sm space-y-4">
       <h2 class="font-bold text-xl mb-4 text-gray-800 border-b pb-2 flex items-center gap-2">
         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,11 +113,7 @@
         </ul>
         <p class="text-xs text-gray-500 mt-2 italic">Haz clic en "Aplicar Filtros" para buscar</p>
       </div>
-    </ng-template>
-
-    <!-- Aside desktop -->
-    <div class="hidden lg:block">
-      <ng-container *ngTemplateOutlet="filtersTemplate"></ng-container>
+      </div>
     </div>
 
     <!-- Mobile filters button -->

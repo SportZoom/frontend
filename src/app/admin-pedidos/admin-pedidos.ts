@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // ← AGREGAR
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
-import { RouterLink } from '@angular/router';
+// RouterLink not required in this component template; HeaderComponent provides navigation
 import { HeaderComponent } from '../shared/header/header.component';
 import { NotificationService } from '../services/notification.service';
 

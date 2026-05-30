@@ -9,8 +9,19 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [
-    require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/forms')
-  ],
+  plugins: (() => {
+    const list = [];
+    try {
+      // optional plugins - if not installed, don't break the build
+      list.push(require('@tailwindcss/aspect-ratio'));
+    } catch (e) {
+      // plugin missing - skip
+    }
+    try {
+      list.push(require('@tailwindcss/forms'));
+    } catch (e) {
+      // plugin missing - skip
+    }
+    return list;
+  })(),
 }
