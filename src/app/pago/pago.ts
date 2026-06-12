@@ -70,21 +70,56 @@ export class PagoComponent implements OnInit {
     }
 
     this.cargando = true;
-    this.checkoutService.aprobarPagoDemo(this.numeroPedido).subscribe({
-      next: (resp) => {
-        localStorage.setItem('pedido_mp', this.numeroPedido);
-        this.router.navigate(['/confirmacion'], {
-          queryParams: {
-            status: 'approved',
-            payment_id: resp.payment_id,
-            external_reference: this.numeroPedido,
-          },
-        });
+    this.checkoutService.crearInitWompi(this.numeroPedido).subscribe({
+      next: (init) => {
+        try {
+          const config: any = {
+            currency: init.currency,
+            amountInCents: init.amount_in_cents,
+            reference: init.reference,
+            publicKey: init.public_key,
+            signature: { integrity: init.signature_integrity },
+          };
+
+          // @ts-ignore - WidgetCheckout provisto por script externo
+          const checkout = new (window as any).WidgetCheckout(config);
+          checkout.open((result: any) => {
+            const transaction = result && result.transaction;
+            const status = transaction ? (transaction.status || '').toLowerCase() : '';
+            const paymentId = transaction ? transaction.id : '';
+            const reference = transaction ? transaction.reference : init.reference;
+
+            if (status === 'approved') {
+              localStorage.setItem('pedido_mp', this.numeroPedido);
+              this.router.navigate(['/confirmacion'], {
+                queryParams: {
+                  transaction_id: paymentId,
+                  reference: reference,
+                  numero_pedido: this.numeroPedido,
+                },
+              });
+            } else {
+              const mensajes: Record<string, string> = {
+                declined: 'El pago fue rechazado. Verifica los datos e intenta nuevamente.',
+                voided: 'El pago fue anulado.',
+                error: 'Ocurrió un error al procesar el pago.',
+              };
+              const mensaje = mensajes[status] || 'El pago no pudo ser completado.';
+              this.router.navigate(['/tienda'], {
+                queryParams: { error: mensaje },
+              });
+            }
+          });
+        } catch (e) {
+          console.error('Widget error', e);
+          this.error = 'Error abriendo el widget de pago.';
+          this.cargando = false;
+        }
       },
       error: () => {
-        this.error = 'No pudimos procesar el pago. Intenta nuevamente.';
+        this.error = 'No pudimos iniciar el pago. Intenta nuevamente.';
         this.cargando = false;
-      },
+      }
     });
   }
 

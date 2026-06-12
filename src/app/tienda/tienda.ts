@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
-// RouterLink not required here; header component handles routing links
+import { ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from '../shared/header/header.component';
 import { CarritoService } from '../services/carrito.service';
-import { NotificationService } from '../services/notification.service'; // ← AGREGAR
+import { NotificationService } from '../services/notification.service';
 import { ConfirmDialogService } from '../services/confirm-dialog.service';
 
 interface Producto {
@@ -100,13 +100,20 @@ export class TiendaComponent implements OnInit {
     private authService: AuthService,
     private carritoService: CarritoService,
     private cdr: ChangeDetectorRef,
-    private notificationService: NotificationService, // ← AGREGAR
-    private confirmDialogService: ConfirmDialogService
+    private notificationService: NotificationService,
+    private confirmDialogService: ConfirmDialogService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
     this.usuario = this.authService.obtenerUsuarioActual();
     this.cargarProductos();
+
+    // Mostrar mensaje de error de pago si viene desde /pago
+    const errorPago = this.route.snapshot.queryParamMap.get('error');
+    if (errorPago) {
+      this.notificationService.error(errorPago);
+    }
 
     this.carritoService.carrito$.subscribe(productos => {
       this.cantidadCarrito = productos.reduce((total, p) => total + p.cantidad, 0);

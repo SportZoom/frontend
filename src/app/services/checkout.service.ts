@@ -18,6 +18,16 @@ export class CheckoutService {
     return this.http.post(this.backendUrl, payload);
   }
 
+  // Obtener init params para Wompi Widget
+  crearInitWompi(numeroPedido: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/pagos/wompi/init/`, { numero_pedido: numeroPedido });
+  }
+
+  // Consultar estado de pago Wompi por numero_pedido
+  estadoWompi(numeroPedido: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/pagos/wompi/estado/${numeroPedido}/`);
+  }
+
   // Consultar pedido por código
   consultarPedido(numeroPedido: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/pedidos/consultar/${numeroPedido}/`);
