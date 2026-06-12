@@ -331,7 +331,7 @@ export class ConfirmacionComponent implements OnInit {
               ? new Date(pedido.fecha).toLocaleDateString('es-CO')
               : new Date().toLocaleDateString('es-CO'),
           };
-          this.statusMP = 'approved';
+          this.statusPago = 'approved';
           localStorage.setItem('ultimo_recibo', JSON.stringify(this.recibo));
           localStorage.removeItem('pedido_mp');
           localStorage.removeItem('numero_pedido');
