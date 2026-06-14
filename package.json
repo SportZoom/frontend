@@ -35,7 +35,7 @@
     "@angular/ssr": "^20.3.2",
     "@emailjs/browser": "^4.4.1",
     "express": "^5.1.0",
-    "jspdf": "^3.0.3",
+    "jspdf": "^4.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "^0.15.1"
@@ -44,6 +44,8 @@
     "@angular/build": "^20.3.2",
     "@angular/cli": "^20.3.2",
     "@angular/compiler-cli": "^20.3.0",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/postcss": "^4.1.14",
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
@@ -57,8 +59,6 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.18",
-    "@tailwindcss/aspect-ratio": "^0.4.2",
-    "@tailwindcss/forms": "^0.5.3",
     "typescript": "~5.9.2"
   }
 }
