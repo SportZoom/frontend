@@ -53,6 +53,10 @@ export class MisPedidosComponent implements OnInit {
     });
   }
 
+  get pedidosFiltrados(): any[] {
+    return this.pedidos.filter(p => p.estado !== 'pendiente');
+  }
+
   getEstadoClass(estado: string): string {
     const clases: Record<string, string> = {
       comprado:    'bg-blue-100 text-blue-700 border-blue-300',

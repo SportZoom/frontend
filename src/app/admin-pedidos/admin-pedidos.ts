@@ -55,6 +55,9 @@ export class AdminPedidosComponent implements OnInit {
   aplicarFiltros() {
     let resultado = [...this.pedidos];
 
+    // Excluir pedidos con estado 'pendiente'
+    resultado = resultado.filter(p => p.estado !== 'pendiente');
+
     // Filtro por estado
     if (this.filtroEstado !== 'todos') {
       resultado = resultado.filter(p => p.estado === this.filtroEstado);
