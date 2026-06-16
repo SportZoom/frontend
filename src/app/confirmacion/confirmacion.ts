@@ -142,38 +142,6 @@ export class ConfirmacionComponent implements OnInit {
     });
   }
 
-  private cargarPedidoDirecto() {
-    this.checkoutService.consultarPedido(this.numeroPedido).subscribe({
-      next: (pedido) => {
-        if (pedido.estado === 'comprado' || pedido.estado_actual === 'comprado') {
-          this.recibo = {
-            numero_pedido: pedido.numero_pedido,
-            nombre: pedido.nombre,
-            email: pedido.email,
-            direccion: pedido.direccion,
-            total: pedido.total,
-            carrito: pedido.carrito,
-            fecha: pedido.fecha
-              ? new Date(pedido.fecha).toLocaleDateString('es-CO')
-              : new Date().toLocaleDateString('es-CO'),
-          };
-          this.statusPago = 'approved';
-          localStorage.setItem('ultimo_recibo', JSON.stringify(this.recibo));
-          this.enviarEmailRecibo();
-          localStorage.removeItem('numero_pedido');
-          localStorage.removeItem('pedido_mp');
-          this.carritoService.limpiarCarrito();
-          this.cargando = false;
-        } else {
-          this.cargarDesdeLocalStorage();
-        }
-      },
-      error: () => {
-        this.cargarDesdeLocalStorage();
-      },
-    });
-  }
-
   private cargarDesdeLocalStorage() {
     const reciboGuardado = localStorage.getItem('ultimo_recibo');
     if (reciboGuardado) {
