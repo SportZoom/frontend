@@ -17,6 +17,8 @@ export class RegistroComponent {
   genero = '';
   password = '';
   confirmarPassword = '';
+  showPassword = false;
+  showConfirmPassword = false;
   aceptaTerminos = false;
   cargando = false;
   errorMsg = '';
