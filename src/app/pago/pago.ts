@@ -90,12 +90,25 @@ export class PagoComponent implements OnInit {
             const reference = transaction ? transaction.reference : init.reference;
 
             if (status === 'approved') {
-              localStorage.setItem('pedido_mp', this.numeroPedido);
-              this.router.navigate(['/confirmacion'], {
-                queryParams: {
-                  transaction_id: paymentId,
-                  reference: reference,
-                  numero_pedido: this.numeroPedido,
+              this.checkoutService.verificarTransaccion(this.numeroPedido, paymentId).subscribe({
+                next: () => {
+                  localStorage.setItem('pedido_mp', this.numeroPedido);
+                  this.router.navigate(['/confirmacion'], {
+                    queryParams: {
+                      transaction_id: paymentId,
+                      reference: reference,
+                      numero_pedido: this.numeroPedido,
+                    },
+                  });
+                },
+                error: () => {
+                  this.router.navigate(['/confirmacion'], {
+                    queryParams: {
+                      transaction_id: paymentId,
+                      reference: reference,
+                      numero_pedido: this.numeroPedido,
+                    },
+                  });
                 },
               });
             } else {

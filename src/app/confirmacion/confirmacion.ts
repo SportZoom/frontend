@@ -38,6 +38,7 @@ export class ConfirmacionComponent implements OnInit {
     const reference = this.route.snapshot.queryParamMap.get('reference');
     this.numeroPedido = this.route.snapshot.queryParamMap.get('numero_pedido') || '';
     this.numeroPedido = this.numeroPedido || localStorage.getItem('pedido_mp') || '';
+    this.paymentId = transactionId || '';
 
     if (!this.numeroPedido) {
       this.cargando = false;
@@ -45,35 +46,45 @@ export class ConfirmacionComponent implements OnInit {
       return;
     }
 
-    this.verificarPago();
+    this.cargarPedidoDirecto();
   }
 
-  private verificarPago() {
-    this.checkoutService.estadoWompi(this.numeroPedido).subscribe({
-      next: (res: any) => {
-        this.statusPago = res.estado || 'pending';
-        this.paymentId = res.payment_id || '';
-
-        if (res.estado === 'approved') {
-          this.cargarPedido();
-        } else if (res.estado === 'rejected' || res.estado === 'cancelled' || res.estado === 'declined' || res.estado === 'error') {
-          this.errorMensaje = 'El pago no fue aprobado.';
+  private cargarPedidoDirecto() {
+    this.checkoutService.consultarPedido(this.numeroPedido).subscribe({
+      next: (pedido) => {
+        if (pedido.estado === 'comprado' || pedido.estado_actual === 'comprado') {
+          this.recibo = {
+            numero_pedido: pedido.numero_pedido,
+            nombre: pedido.nombre,
+            email: pedido.email,
+            direccion: pedido.direccion,
+            total: pedido.total,
+            carrito: pedido.carrito,
+            fecha: pedido.fecha
+              ? new Date(pedido.fecha).toLocaleDateString('es-CO')
+              : new Date().toLocaleDateString('es-CO'),
+            payment_id: this.paymentId,
+          };
+          this.statusPago = 'approved';
+          localStorage.setItem('ultimo_recibo', JSON.stringify(this.recibo));
+          this.enviarEmailRecibo();
+          localStorage.removeItem('numero_pedido');
+          localStorage.removeItem('pedido_mp');
+          this.carritoService.limpiarCarrito();
           this.cargando = false;
         } else {
-          // Pendiente — hacer polling
           this.pollingEstado();
         }
       },
       error: () => {
-        // Fallback: consultar pedido directamente
-        this.cargarPedidoDirecto();
+        this.pollingEstado();
       },
     });
   }
 
   private pollingEstado() {
     let attempts = 0;
-    const maxAttempts = 10;
+    const maxAttempts = 5;
     const interval = setInterval(() => {
       attempts += 1;
       this.checkoutService.estadoWompi(this.numeroPedido).subscribe({
@@ -90,17 +101,17 @@ export class ConfirmacionComponent implements OnInit {
             this.cargando = false;
           } else if (attempts >= maxAttempts) {
             clearInterval(interval);
-            this.cargarPedidoDirecto();
+            this.cargarDesdeLocalStorage();
           }
         },
         error: () => {
           if (attempts >= maxAttempts) {
             clearInterval(interval);
-            this.cargarPedidoDirecto();
+            this.cargarDesdeLocalStorage();
           }
         },
       });
-    }, 3000);
+    }, 2000);
   }
 
   private cargarPedido() {

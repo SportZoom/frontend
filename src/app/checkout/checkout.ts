@@ -103,12 +103,25 @@ export class CheckoutComponent implements OnInit {
             const reference = transaction ? transaction.reference : init.reference;
 
             if (status === 'approved') {
-              localStorage.setItem('pedido_mp', numeroPedido);
-              this.router.navigate(['/confirmacion'], {
-                queryParams: {
-                  transaction_id: paymentId,
-                  reference: reference,
-                  numero_pedido: numeroPedido,
+              this.checkoutService.verificarTransaccion(numeroPedido, paymentId).subscribe({
+                next: () => {
+                  localStorage.setItem('pedido_mp', numeroPedido);
+                  this.router.navigate(['/confirmacion'], {
+                    queryParams: {
+                      transaction_id: paymentId,
+                      reference: reference,
+                      numero_pedido: numeroPedido,
+                    },
+                  });
+                },
+                error: () => {
+                  this.router.navigate(['/confirmacion'], {
+                    queryParams: {
+                      transaction_id: paymentId,
+                      reference: reference,
+                      numero_pedido: numeroPedido,
+                    },
+                  });
                 },
               });
             } else {

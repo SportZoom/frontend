@@ -28,6 +28,14 @@ export class CheckoutService {
     return this.http.get(`${this.apiUrl}/pagos/wompi/estado/${numeroPedido}/`);
   }
 
+  // Verificar transaccion contra API de Wompi y descontar stock
+  verificarTransaccion(numeroPedido: string, transactionId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/pagos/wompi/verificar/`, {
+      numero_pedido: numeroPedido,
+      transaction_id: transactionId,
+    });
+  }
+
   // Consultar pedido por código
   consultarPedido(numeroPedido: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/pedidos/consultar/${numeroPedido}/`);
